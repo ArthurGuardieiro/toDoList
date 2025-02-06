@@ -19,12 +19,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
+import com.example.todolist.feature.addedit.AddEditEvent
 import com.example.todolist.ui.theme.ConfirmGreen
 import com.example.todolist.ui.theme.LightBlue
 
 @Composable
 @Preview
-fun FormTaskComponent() {
+fun FormTaskComponent(title: String, body: String?, onEvent: (AddEditEvent) -> Unit) {
     Column(
         modifier = Modifier.background(Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -33,8 +34,10 @@ fun FormTaskComponent() {
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value ="" ,
-            onValueChange = {},
+            value = title ,
+            onValueChange = { onEvent(
+                AddEditEvent.TitleChanged(it)
+            ) },
             placeholder = {
                 Text(
                     text = "Título",
@@ -52,8 +55,12 @@ fun FormTaskComponent() {
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value ="" ,
-            onValueChange = {},
+            value =body ?: "" ,
+            onValueChange = { onEvent(
+                AddEditEvent.BodyChanged(it)
+            )
+
+            },
             placeholder = {
                 Text(
                     text = "Descrição",

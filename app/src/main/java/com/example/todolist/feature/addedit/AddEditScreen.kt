@@ -1,4 +1,4 @@
-package com.example.todolist.feature
+package com.example.todolist.feature.addedit
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -9,18 +9,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,21 +33,73 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.components.AddMessageComponent
 import com.example.todolist.components.FormTaskComponent
 import com.example.todolist.components.ProfileHeaderComponent
-import com.example.todolist.components.TaskComponent
-import com.example.todolist.components.WelcomeMessageComponent
-import com.example.todolist.data.taskList
+import com.example.todolist.data.TaskDatabase
+import com.example.todolist.data.TaskDatabaseProvider
+import com.example.todolist.data.TaskRepositoryImpl
 import com.example.todolist.ui.theme.ToDoListTheme
-import java.text.Normalizer.Form
+import com.example.todolist.ui.theme.UiEvent
 
+@Composable
+fun AddEditScreen(
+    navigateBack: () -> Unit,
+) {
+    val context = LocalContext.current.applicationContext
+    val database = TaskDatabaseProvider.provide(context)
+    val repository = TaskRepositoryImpl(
+        dao = database.taskDao
+    )
+    val viewModal = viewModel<AddEditViewModel> {
+        AddEditViewModel(repository = repository)
+    }
+    
+    val title = viewModal.title
+    val description = viewModal.description
+
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModal.uiEvent.collect { uiEvent ->
+            when(uiEvent) {
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = uiEvent.message,
+                    )
+                }
+                UiEvent.NavigateBack -> {
+                    navigateBack()
+                }
+                is UiEvent.Navigate<*> -> {
+
+                }
+            }
+        }
+    }
+
+    AddEditContent(
+        title = title,
+        description = description,
+        snackbarHostState = snackbarHostState,
+        onEvent = viewModal::onEvent,
+    )
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddEditScreen(){
+fun AddEditContent(
+    title: String,
+    description: String?,
+    snackbarHostState: SnackbarHostState,
+    onEvent: (AddEditEvent) -> Unit,
+){
     var selectedScreen by remember {
         mutableStateOf(1)
     }
@@ -83,12 +138,23 @@ fun AddEditScreen(){
                                     tint = if (selectedScreen == index) Color.White else Color.Black
                                 )
                             }
-                        }
+                        },
+
                     )
 
 
                 }
             }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick =  {
+                onEvent(AddEditEvent.Save)
+            } ) {
+                Icon(imageVector = Icons.Filled.Check, contentDescription = "Save")
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) {
         LazyColumn(
@@ -113,7 +179,9 @@ fun AddEditScreen(){
             }
 
             item {
-                FormTaskComponent()
+                FormTaskComponent(
+                    title, description, onEvent
+                )
             }
 
 
@@ -128,6 +196,11 @@ fun AddEditScreen(){
 @Preview
 private fun AddEdditContentPreview(){
     ToDoListTheme {
-        AddEditScreen()
+        AddEditContent(
+            title = "",
+            description = null,
+            snackbarHostState = SnackbarHostState(),
+            onEvent = {}
+        )
     }
 }

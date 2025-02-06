@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
@@ -33,31 +32,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.todolist.components.AddMessageComponent
+import com.example.todolist.components.FormTaskComponent
 import com.example.todolist.components.ProfileHeaderComponent
 import com.example.todolist.components.TaskComponent
 import com.example.todolist.components.WelcomeMessageComponent
 import com.example.todolist.data.taskList
 import com.example.todolist.ui.theme.ToDoListTheme
+import java.text.Normalizer.Form
 
-@Composable
-fun HomeScreen(
-    navigateToAddEditScreen: (id: Long?) -> Unit
-) {
-    HomeContent(
-        onAddItemClick = navigateToAddEditScreen
-    )
-}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeContent(
-    onAddItemClick: (id: Long?) -> Unit,
-) {
+fun AddEditScreen(){
     var selectedScreen by remember {
         mutableStateOf(1)
     }
     val screens = listOf("Calendar", "Home", "Notifications")
-
     Scaffold(
         bottomBar = {
             BottomNavigation(
@@ -98,18 +89,14 @@ fun HomeContent(
 
                 }
             }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick =  {onAddItemClick(null)} ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
-            }
         }
     ) {
         LazyColumn(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 top = 16.dp,
-                bottom = 16.dp
+                bottom = 16.dp,
+                end = 16.dp
             )
 
         ) {
@@ -120,28 +107,27 @@ fun HomeContent(
             item {
                 Spacer(modifier = Modifier.height(30.dp))
 
-                WelcomeMessageComponent()
+                AddMessageComponent()
 
                 Spacer(modifier = Modifier.height(30.dp))
             }
 
-            items(taskList) { task ->
-                TaskComponent(task = task)
-
-                Spacer(modifier = Modifier.height(16.dp))
+            item {
+                FormTaskComponent()
             }
+
+
 
         }
 
     }
+
 }
 
 @Composable
 @Preview
-private fun HomeScreenContentPreview() {
+private fun AddEdditContentPreview(){
     ToDoListTheme {
-        HomeContent(
-            onAddItemClick = {}
-        )
+        AddEditScreen()
     }
 }

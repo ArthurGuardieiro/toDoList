@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface TaskRepository {
 
 
-    suspend fun insert(title: String, description: String?)
+    suspend fun insert(title: String, description: String?, startTime: String, endTime: String)
 
     suspend fun updateCompleted(id: Long, isCompleted: String?)
 

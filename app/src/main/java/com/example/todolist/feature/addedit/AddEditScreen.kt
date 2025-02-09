@@ -61,6 +61,8 @@ fun AddEditScreen(
     
     val title = viewModal.title
     val description = viewModal.description
+    val startTime = viewModal.startTime
+    val endTime = viewModal.endTime
 
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -87,6 +89,8 @@ fun AddEditScreen(
     AddEditContent(
         title = title,
         description = description,
+        startTime = startTime,
+        endTime = endTime,
         snackbarHostState = snackbarHostState,
         onEvent = viewModal::onEvent,
     )
@@ -97,6 +101,8 @@ fun AddEditScreen(
 fun AddEditContent(
     title: String,
     description: String?,
+    startTime: String,
+    endTime: String,
     snackbarHostState: SnackbarHostState,
     onEvent: (AddEditEvent) -> Unit,
 ){
@@ -180,7 +186,7 @@ fun AddEditContent(
 
             item {
                 FormTaskComponent(
-                    title, description, onEvent
+                    title, description, startTime, endTime, onEvent
                 )
             }
 
@@ -199,6 +205,8 @@ private fun AddEdditContentPreview(){
         AddEditContent(
             title = "",
             description = null,
+            startTime = "",
+            endTime = "",
             snackbarHostState = SnackbarHostState(),
             onEvent = {}
         )

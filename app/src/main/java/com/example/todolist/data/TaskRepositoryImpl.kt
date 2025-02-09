@@ -8,12 +8,12 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
 
 
-    override suspend fun insert(title: String, description: String?) {
+    override suspend fun insert(title: String, description: String?, startTime: String, endTime: String) {
         val entity = TaskEntity(
             title = title,
             body = description,
-            startTime = "",
-            endTime = ""
+            startTime = startTime,
+            endTime = endTime
         )
 
         dao.insert(entity)

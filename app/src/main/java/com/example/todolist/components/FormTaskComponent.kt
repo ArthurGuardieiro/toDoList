@@ -25,7 +25,7 @@ import com.example.todolist.ui.theme.LightBlue
 
 @Composable
 @Preview
-fun FormTaskComponent(title: String, body: String?, onEvent: (AddEditEvent) -> Unit) {
+fun FormTaskComponent(title: String, body: String?, startTime: String, endTime: String, onEvent: (AddEditEvent) -> Unit) {
     Column(
         modifier = Modifier.background(Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -78,8 +78,10 @@ fun FormTaskComponent(title: String, body: String?, onEvent: (AddEditEvent) -> U
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value ="" ,
-            onValueChange = {},
+            value =startTime ,
+            onValueChange = { onEvent(
+                AddEditEvent.StartChanged(it)
+            ) },
             placeholder = {
                 Text(
                     text = "Horário de início da atividade",
@@ -97,8 +99,10 @@ fun FormTaskComponent(title: String, body: String?, onEvent: (AddEditEvent) -> U
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value ="" ,
-            onValueChange = {},
+            value =endTime ,
+            onValueChange = { onEvent(
+                AddEditEvent.EndChanged(it)
+            ) },
             placeholder = {
                 Text(
                     text = "Horário de término da atividade",

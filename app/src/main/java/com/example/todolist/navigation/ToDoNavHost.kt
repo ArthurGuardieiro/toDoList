@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.todolist.feature.addedit.AddEditScreen
-import com.example.todolist.feature.HomeScreen
+import com.example.todolist.feature.home.HomeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

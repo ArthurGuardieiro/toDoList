@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Database(
     entities = [TaskEntity::class],
@@ -27,7 +30,9 @@ object TaskDatabaseProvider {
                 context.applicationContext,
                 TaskDatabase::class.java,
                 "todo-app"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
             INSTANCE = instance
             instance
         }

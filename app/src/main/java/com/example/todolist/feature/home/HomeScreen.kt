@@ -1,4 +1,4 @@
-package com.example.todolist.feature
+package com.example.todolist.feature.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,19 +32,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.components.ProfileHeaderComponent
 import com.example.todolist.components.TaskComponent
 import com.example.todolist.components.WelcomeMessageComponent
+import com.example.todolist.data.Task
+import com.example.todolist.data.TaskDatabaseProvider
+import com.example.todolist.data.TaskRepositoryImpl
 import com.example.todolist.data.taskList
+import com.example.todolist.feature.addedit.AddEditViewModel
 import com.example.todolist.ui.theme.ToDoListTheme
 
 @Composable
 fun HomeScreen(
     navigateToAddEditScreen: (id: Long?) -> Unit
 ) {
+
+    val context = LocalContext.current.applicationContext
+    val database = TaskDatabaseProvider.provide(context)
+    val repository = TaskRepositoryImpl(
+        dao = database.taskDao
+    )
+    val viewModel = viewModel<HomeViewModel> {
+        HomeViewModel(repository = repository)
+    }
+
+    val todos by viewModel.todos.collectAsState()
+
     HomeContent(
+        todos = todos,
         onAddItemClick = navigateToAddEditScreen
     )
 }
@@ -51,6 +71,7 @@ fun HomeScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeContent(
+    todos: List<Task>,
     onAddItemClick: (id: Long?) -> Unit,
 ) {
     var selectedScreen by remember {
@@ -125,7 +146,7 @@ fun HomeContent(
                 Spacer(modifier = Modifier.height(30.dp))
             }
 
-            items(taskList) { task ->
+            items(todos) { task ->
                 TaskComponent(task = task)
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -141,6 +162,7 @@ fun HomeContent(
 private fun HomeScreenContentPreview() {
     ToDoListTheme {
         HomeContent(
+            todos = listOf(),
             onAddItemClick = {}
         )
     }

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +46,9 @@ import com.example.todolist.data.TaskDatabaseProvider
 import com.example.todolist.data.TaskRepositoryImpl
 import com.example.todolist.data.taskList
 import com.example.todolist.feature.addedit.AddEditViewModel
+import com.example.todolist.navigation.AddEditRoute
 import com.example.todolist.ui.theme.ToDoListTheme
+import com.example.todolist.ui.theme.UiEvent
 
 @Composable
 fun HomeScreen(
@@ -63,9 +66,29 @@ fun HomeScreen(
 
     val todos by viewModel.todos.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when(uiEvent){
+                is UiEvent.Navigate<*> -> {
+                    when(uiEvent.route) {
+                        is AddEditRoute -> {
+                            navigateToAddEditScreen(uiEvent.route.id)
+                        }
+                    }
+                }
+                UiEvent.NavigateBack -> {
+
+                }
+                is UiEvent.ShowSnackbar -> {
+
+                }
+            }
+        }
+    }
+
     HomeContent(
         todos = todos,
-        onAddItemClick = navigateToAddEditScreen
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -73,7 +96,7 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     todos: List<Task>,
-    onAddItemClick: (id: Long?) -> Unit,
+    onEvent: (HomeEvent) -> Unit,
 ) {
     var selectedScreen by remember {
         mutableStateOf(1)
@@ -122,7 +145,9 @@ fun HomeContent(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick =  {onAddItemClick(null)} ) {
+            FloatingActionButton(onClick = {
+                onEvent(HomeEvent.AddEdit(null))
+            }  ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
             }
         }
@@ -142,13 +167,20 @@ fun HomeContent(
             item {
                 Spacer(modifier = Modifier.height(30.dp))
 
-                WelcomeMessageComponent()
+                val quantity = todos.size
+                WelcomeMessageComponent(quantity)
 
                 Spacer(modifier = Modifier.height(30.dp))
             }
 
             items(todos) { task ->
-                TaskComponent(task = task)
+                TaskComponent(
+                    task = task,
+                    onDeletClick = {
+                        onEvent(HomeEvent.Delete(task.id))
+                    },
+                    onItemClick = {}
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -164,7 +196,9 @@ private fun HomeScreenContentPreview() {
     ToDoListTheme {
         HomeContent(
             todos = listOf(),
-            onAddItemClick = {}
+            onEvent = {
+
+            }
         )
     }
 }

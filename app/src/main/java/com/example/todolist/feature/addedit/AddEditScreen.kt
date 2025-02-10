@@ -48,6 +48,7 @@ import com.example.todolist.ui.theme.UiEvent
 
 @Composable
 fun AddEditScreen(
+    id: Long?,
     navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current.applicationContext
@@ -56,7 +57,10 @@ fun AddEditScreen(
         dao = database.taskDao
     )
     val viewModal = viewModel<AddEditViewModel> {
-        AddEditViewModel(repository = repository)
+        AddEditViewModel(
+            id = id,
+            repository = repository
+        )
     }
     
     val title = viewModal.title

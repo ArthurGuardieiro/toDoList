@@ -8,8 +8,17 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
 
 
-    override suspend fun insert(title: String, description: String?, startTime: String, endTime: String) {
-        val entity = TaskEntity(
+    override suspend fun insert(title: String, description: String?, startTime: String, endTime: String, id: Long?) {
+        val entity = id?.let{
+            dao.getBy(it)?.copy(
+                title = title,
+                body = description,
+                startTime = startTime,
+                endTime = endTime
+            )
+
+
+        } ?: TaskEntity(
             title = title,
             body = description,
             startTime = startTime,

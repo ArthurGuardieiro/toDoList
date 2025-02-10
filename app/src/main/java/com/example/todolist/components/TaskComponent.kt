@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -30,12 +31,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
 import com.example.todolist.data.Task
+import com.example.todolist.feature.home.HomeEvent
 import com.example.todolist.ui.theme.LightBlue
 import com.example.todolist.ui.theme.LightGreen
 import com.example.todolist.ui.theme.LightPurple
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
-fun TaskComponent(task: Task) {
+fun TaskComponent(
+    task: Task,
+    onItemClick: () -> Unit,
+    onDeletClick: () -> Unit
+) {
     val taskColor = listOf(LightPurple, LightBlue, LightGreen).random()
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -43,7 +52,7 @@ fun TaskComponent(task: Task) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "${task.startTime}\nAM",
+            text = converterParaAMPM(task.startTime),
             fontFamily = FontFamily(Font(R.font.nunito_bold)),
             textAlign = TextAlign.Center
         )
@@ -101,7 +110,7 @@ fun TaskComponent(task: Task) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "${task.startTime} - ${task.endTime}AM",
+                            text = "${task.startTime} - ${converterParaAMPMSemQuebra(task.endTime)}",
                             fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             modifier = Modifier
                                 .padding(
@@ -110,11 +119,13 @@ fun TaskComponent(task: Task) {
                                 ),
 
                             )
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Deletar",
-                            modifier = Modifier.padding(end = 10.dp)
-                        )
+                        IconButton(
+                            onClick =  onDeletClick
+                        ){
+                            Icon(imageVector = Icons.Filled.Delete,
+                                contentDescription = "Deletar",
+                                modifier = Modifier.padding(end = 10.dp))
+                        }
 
                     }
 
@@ -135,3 +146,27 @@ fun TaskComponent(task: Task) {
     }
 }
 
+fun converterParaAMPM(horas24: String): String {
+    return try {
+        val formato24h = DateTimeFormatter.ofPattern("HH:mm")
+        val formato12h = DateTimeFormatter.ofPattern("hh:mm a", Locale("en", "US")) // AM/PM
+
+        val hora = LocalTime.parse(horas24, formato24h)
+        val formatoFinal = hora.format(formato12h).replace(" ", "\n") // Adiciona quebra de linha antes de AM/PM
+        formatoFinal
+    } catch (e: Exception) {
+        "Formato inválido"
+    }
+}
+
+fun converterParaAMPMSemQuebra(horas24: String): String {
+    return try {
+        val formato24h = DateTimeFormatter.ofPattern("HH:mm")
+        val formato12h = DateTimeFormatter.ofPattern("hh:mm a", Locale("en", "US")) // AM/PM
+
+        val hora = LocalTime.parse(horas24, formato24h)
+        hora.format(formato12h)
+    } catch (e: Exception) {
+        "Formato inválido"
+    }
+}

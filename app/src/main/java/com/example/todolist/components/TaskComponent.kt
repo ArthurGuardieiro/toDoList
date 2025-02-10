@@ -3,6 +3,7 @@ package com.example.todolist.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,7 +75,8 @@ fun TaskComponent(
 
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .clickable { onItemClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
@@ -120,11 +122,12 @@ fun TaskComponent(
 
                             )
                         IconButton(
-                            onClick =  onDeletClick
+                            onClick =  onDeletClick,
+                            modifier = Modifier.padding(end = 10.dp)
                         ){
                             Icon(imageVector = Icons.Filled.Delete,
-                                contentDescription = "Deletar",
-                                modifier = Modifier.padding(end = 10.dp))
+                                contentDescription = "Deletar"
+                            )
                         }
 
                     }

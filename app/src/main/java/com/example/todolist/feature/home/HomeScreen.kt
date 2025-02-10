@@ -179,7 +179,9 @@ fun HomeContent(
                     onDeletClick = {
                         onEvent(HomeEvent.Delete(task.id))
                     },
-                    onItemClick = {}
+                    onItemClick = {
+                        onEvent(HomeEvent.AddEdit(task.id))
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

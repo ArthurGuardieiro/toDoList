@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -99,7 +100,7 @@ fun HomeContent(
                         icon = {
                             Box(
                                 modifier = Modifier
-                                    .size(50.dp)
+                                    .size(55.dp)
                                     .clip(CircleShape)
                                     .background(if (selectedScreen == index) Color.Black else Color.White),
                                 contentAlignment = Alignment.Center

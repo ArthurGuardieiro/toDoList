@@ -14,7 +14,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
 import com.example.todolist.data.Task
@@ -91,16 +95,30 @@ fun TaskComponent(task: Task) {
                         )
                     }
 
-                    Text(
-                        text = "${task.startTime} - ${task.endTime}AM",
-                        fontFamily = FontFamily(Font(R.font.nunito_bold)),
-                        modifier = Modifier
-                            .padding(
-                                start = 12.dp,
-                                bottom = 12.dp
-                            ),
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "${task.startTime} - ${task.endTime}AM",
+                            fontFamily = FontFamily(Font(R.font.nunito_bold)),
+                            modifier = Modifier
+                                .padding(
+                                    start = 12.dp,
+                                    bottom = 12.dp
+                                ),
 
+                            )
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Deletar",
+                            modifier = Modifier.padding(end = 10.dp)
                         )
+
+                    }
+
+
                 }
 
                 Divider(
@@ -116,3 +134,4 @@ fun TaskComponent(task: Task) {
 
     }
 }
+

@@ -152,13 +152,6 @@ fun AddEditContent(
                 }
             }
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick =  {
-                onEvent(AddEditEvent.Save)
-            } ) {
-                Icon(imageVector = Icons.Filled.Check, contentDescription = "Save")
-            }
-        },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         }

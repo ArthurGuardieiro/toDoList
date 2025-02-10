@@ -119,7 +119,9 @@ fun FormTaskComponent(title: String, body: String?, startTime: String, endTime: 
         )
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onEvent(AddEditEvent.Save)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

@@ -122,7 +122,7 @@ fun TaskComponent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "${task.startTime} - ${converterParaAMPMSemQuebra(task.endTime)}",
+                            text = "${converterParaHorasSemAMPM(task.startTime)} - ${converterParaAMPMSemQuebra(task.endTime)}",
                             fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             modifier = Modifier
                                 .padding(
@@ -178,6 +178,17 @@ fun converterParaAMPMSemQuebra(horas24: String): String {
         val formato12h = DateTimeFormatter.ofPattern("hh:mm a", Locale("en", "US")) // AM/PM
 
         val hora = LocalTime.parse(horas24, formato24h)
+        hora.format(formato12h)
+    } catch (e: Exception) {
+        "Formato inválido"
+    }
+}
+
+fun converterParaHorasSemAMPM(horas24: String): String {
+    return try {
+        val formato12h = DateTimeFormatter.ofPattern("hh:mm", Locale("en", "US")) // Sem AM/PM
+
+        val hora = LocalTime.parse(horas24)
         hora.format(formato12h)
     } catch (e: Exception) {
         "Formato inválido"

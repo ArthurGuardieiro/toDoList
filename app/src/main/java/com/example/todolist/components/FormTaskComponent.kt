@@ -24,7 +24,6 @@ import com.example.todolist.ui.theme.ConfirmGreen
 import com.example.todolist.ui.theme.LightBlue
 
 @Composable
-@Preview
 fun FormTaskComponent(title: String, body: String?, startTime: String, endTime: String, onEvent: (AddEditEvent) -> Unit) {
     Column(
         modifier = Modifier.background(Color.Transparent),

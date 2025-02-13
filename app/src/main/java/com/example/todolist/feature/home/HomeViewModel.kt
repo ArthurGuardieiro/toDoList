@@ -36,12 +36,22 @@ class HomeViewModel(
                     _uiEvent.send(UiEvent.Navigate(AddEditRoute(event.id)))
                 }
             }
+
+            is HomeEvent.CompleteChanged -> {
+                completeChanged(event.id, event.isCompleted)
+            }
         }
     }
 
     private fun delete(id: Long) {
         viewModelScope.launch {
             repository.delete(id)
+        }
+    }
+
+    private fun completeChanged(id: Long, completed: Boolean) {
+        viewModelScope.launch {
+            repository.updateCompleted(id, completed)
         }
     }
 

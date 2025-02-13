@@ -21,6 +21,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +47,13 @@ import java.util.Locale
 fun TaskComponent(
     task: Task,
     onItemClick: () -> Unit,
-    onDeletClick: () -> Unit
+    onDeletClick: () -> Unit,
+    onCompleteChanged: () -> Unit
 ) {
     val taskColor = listOf(LightPurple, LightBlue, LightGreen).random()
+
+
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -64,10 +71,12 @@ fun TaskComponent(
                 modifier = Modifier
                     .size(16.dp)
                     .clip(CircleShape)
+                    .background(if (task.isCompleted) Color.Green else Color.White)
                     .border(
-                        border = BorderStroke(3.dp, Color.Black),
+                        border = BorderStroke(3.dp, if (task.isCompleted) Color.Green else Color.Black),
                         shape = CircleShape
                     )
+                    .clickable { onCompleteChanged() }
             )
 
             Divider(modifier = Modifier.width(6.dp), color = Color.Black)
@@ -75,7 +84,8 @@ fun TaskComponent(
 
 
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .clickable { onItemClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {

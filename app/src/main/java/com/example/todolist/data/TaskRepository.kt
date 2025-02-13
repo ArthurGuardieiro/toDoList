@@ -8,7 +8,7 @@ interface TaskRepository {
 
     suspend fun insert(title: String, description: String?, startTime: String, endTime: String, id: Long? = null)
 
-    suspend fun updateCompleted(id: Long, isCompleted: String?)
+    suspend fun updateCompleted(id: Long, isCompleted: Boolean)
 
     suspend fun delete(id: Long)
 

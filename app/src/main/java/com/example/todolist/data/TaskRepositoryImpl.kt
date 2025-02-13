@@ -14,7 +14,7 @@ class TaskRepositoryImpl(
                 title = title,
                 body = description,
                 startTime = startTime,
-                endTime = endTime
+                endTime = endTime,
             )
 
 
@@ -22,15 +22,16 @@ class TaskRepositoryImpl(
             title = title,
             body = description,
             startTime = startTime,
-            endTime = endTime
+            endTime = endTime,
+            isCompleted = false
         )
 
         dao.insert(entity)
     }
 
-    override suspend fun updateCompleted(id: Long, isCompleted: String?) {
+    override suspend fun updateCompleted(id: Long, isCompleted: Boolean) {
         val existingEntity = dao.getBy(id) ?: return
-        val updateEntity = existingEntity.copy(body = isCompleted)
+        val updateEntity = existingEntity.copy(isCompleted = isCompleted)
         dao.insert(updateEntity)
     }
 
@@ -47,7 +48,8 @@ class TaskRepositoryImpl(
                     title = entity.title,
                     body = entity.body,
                     startTime = entity.startTime,
-                    endTime = entity.endTime
+                    endTime = entity.endTime,
+                    isCompleted = entity.isCompleted
                 )
             }
         }
@@ -60,7 +62,8 @@ class TaskRepositoryImpl(
                 title = entity.title,
                 body = entity.body,
                 startTime = entity.startTime,
-                endTime = entity.endTime
+                endTime = entity.endTime,
+                isCompleted = entity.isCompleted
             )
         }
     }

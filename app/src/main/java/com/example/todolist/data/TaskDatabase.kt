@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [TaskEntity::class],
-    version = 1,
+    version = 2,
 )
 abstract class TaskDatabase : RoomDatabase() {
 

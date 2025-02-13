@@ -44,7 +44,6 @@ import com.example.todolist.components.WelcomeMessageComponent
 import com.example.todolist.data.Task
 import com.example.todolist.data.TaskDatabaseProvider
 import com.example.todolist.data.TaskRepositoryImpl
-import com.example.todolist.data.taskList
 import com.example.todolist.feature.addedit.AddEditViewModel
 import com.example.todolist.navigation.AddEditRoute
 import com.example.todolist.ui.theme.ToDoListTheme
@@ -181,6 +180,9 @@ fun HomeContent(
                     },
                     onItemClick = {
                         onEvent(HomeEvent.AddEdit(task.id))
+                    },
+                    onCompleteChanged = {
+                        onEvent(HomeEvent.CompleteChanged(task.id, isCompleted = true))
                     }
                 )
 

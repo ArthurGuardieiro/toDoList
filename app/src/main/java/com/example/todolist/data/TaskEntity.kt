@@ -9,5 +9,6 @@ data class TaskEntity(
     val title: String,
     val body: String? = null,
     val startTime: String,
-    val endTime: String
+    val endTime: String,
+    val isCompleted: Boolean
 )
